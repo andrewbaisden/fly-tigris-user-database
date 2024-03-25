@@ -20,7 +20,7 @@ export function useFetch(url) {
 
     // const pollInterval = setInterval(() => {
     //   fetchData();
-    // }, 5000);
+    // }, 3000);
 
     // return () => {
     //   clearInterval(pollInterval);

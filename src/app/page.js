@@ -26,9 +26,10 @@ export default function Home() {
   const { data, error, isLoading } = useFetch(
     `${process.env.NEXT_PUBLIC_SECRET_HOST}/api/getusers`
   );
+
   if (error) return <div>An error has occurred.</div>;
   if (isLoading) return <div>Loading...</div>;
-  console.log(data);
+  console.log('API GET Data:', data);
 
   const { postRequest } = usePost();
   const { updateRequest } = useUpdate();
@@ -176,7 +177,7 @@ export default function Home() {
             </tr>
           </thead>
 
-          {data === 0 ? (
+          {!data || error || isLoading ? (
             <tbody></tbody>
           ) : (
             <tbody>

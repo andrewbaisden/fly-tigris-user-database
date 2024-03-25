@@ -45,6 +45,7 @@ export async function GET() {
           return userObject;
         })
       );
+      // console.log('test', Response.json(users));
       return Response.json(users);
     }
   } catch (e) {
