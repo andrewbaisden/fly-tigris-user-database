@@ -1,11 +1,16 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useFetch } from './hooks/useFetch';
 import { usePost } from './hooks/usePost';
 import { useUpdate } from './hooks/useUpdate';
 import { useDelete } from './hooks/useDelete';
 
 export default function Home() {
+  // GET API HOST URL
+  // Example fly.io online: https://fly-your-app-online.fly.dev/
+  // Local version: http://localhost:3000/
+  const API = 'http://localhost:3000/';
+
   // POST form input state
   const [firstname, setFirstname] = useState('');
   const [lastname, setlastname] = useState('');
@@ -23,13 +28,14 @@ export default function Home() {
   // DELETE form input state
   const [deleteId, setDeleteId] = useState('');
 
-  const { data, error, isLoading } = useFetch(
-    `${process.env.NEXT_PUBLIC_SECRET_HOST}/api/getusers`
-  );
-
+  // GET Route
+  const { data, error, isLoading } = useFetch(`${API}/api/getusers`);
   if (error) return <div>An error has occurred.</div>;
   if (isLoading) return <div>Loading...</div>;
-  console.log('API GET Data:', data);
+
+  useEffect(() => {
+    console.log('Client API GET Data:', data);
+  }, [data]);
 
   const { postRequest } = usePost();
   const { updateRequest } = useUpdate();
@@ -72,11 +78,8 @@ export default function Home() {
           email: email,
           password: password,
         };
-
-        postRequest(
-          `${process.env.NEXT_PUBLIC_SECRET_HOST}/api/postuser`,
-          user
-        );
+        // POST Route
+        postRequest(`${API}/api/postuser`, user);
         console.log(`User ${user}`);
         setFirstname('');
         setlastname('');
@@ -114,11 +117,8 @@ export default function Home() {
         };
 
         console.log(`User: ${user}`);
-
-        updateRequest(
-          `${process.env.NEXT_PUBLIC_SECRET_HOST}/api/updateuser`,
-          user
-        );
+        // UPDATE Route
+        updateRequest(`${API}/api/updateuser`, user);
 
         setUpdateId('');
         setUpdateFirstname('');
@@ -145,11 +145,8 @@ export default function Home() {
         };
 
         console.log('User ID', userId);
-
-        deleteRequest(
-          `${process.env.NEXT_PUBLIC_SECRET_HOST}/api/deleteuser`,
-          userId
-        );
+        // DELETE Route
+        deleteRequest(`${API}/api/deleteuser`, userId);
         console.log(`User ${deleteId} deleted`);
         console.log(`UserId ${userId}`);
         setDeleteId('');
@@ -177,7 +174,7 @@ export default function Home() {
             </tr>
           </thead>
 
-          {!data || error || isLoading ? (
+          {data === 0 ? (
             <tbody></tbody>
           ) : (
             <tbody>

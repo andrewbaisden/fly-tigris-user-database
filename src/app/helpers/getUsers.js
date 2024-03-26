@@ -30,6 +30,7 @@ export async function fetchAllUsersFromS3() {
     console.log('List Result', Contents);
     if (!Contents) {
       console.log('no users');
+      return [];
     } else {
       const users = await Promise.all(
         Contents.map(async (item) => {
@@ -55,6 +56,7 @@ export async function fetchAllUsersFromS3() {
 export async function getUserById(users, userId) {
   if (!users) {
     console.log('no users');
+    return [];
   } else {
     return users.find((user) => user.id === userId);
   }
@@ -63,6 +65,7 @@ export async function getUserById(users, userId) {
 export async function getUserByIdEmail(users, email) {
   if (!users) {
     console.log('no users');
+    return [];
   } else {
     return users.find(
       (user) => user.email.toLowerCase() === email.toLowerCase()

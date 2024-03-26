@@ -22,34 +22,43 @@ export async function GET() {
         secretAccessKey: process.env.NEXT_PUBLIC_SECRET_AWS_SECRET_ACCESS_KEY,
       },
     });
-    const list = new ListObjectsV2Command({
+
+    const listParams = {
       Bucket: process.env.NEXT_PUBLIC_SECRET_BUCKET_NAME,
       MaxKeys: 10,
-    });
+    };
+    const list = new ListObjectsV2Command(listParams);
     const { Contents } = await s3.send(list);
+
     console.log('List Result', Contents);
-    if (!Contents) {
-      console.log('no users');
-      return Response.json([]);
-    } else {
-      const users = await Promise.all(
-        Contents.map(async (item) => {
-          const getObject = new GetObjectCommand({
-            Bucket: process.env.NEXT_PUBLIC_SECRET_BUCKET_NAME,
-            Key: item.Key,
-          });
-          const { Body } = await s3.send(getObject);
-          const data = await streamToString(Body);
-          const userObject = JSON.parse(data);
-          console.log('Data', data);
-          return userObject;
-        })
-      );
-      // console.log('test', Response.json(users));
-      return Response.json(users);
+
+    if (!Contents || Contents.length === 0) {
+      console.log('No users found');
+      return new Response(JSON.stringify({ error: 'No users found' }), {
+        status: 404,
+      });
     }
+
+    const users = await Promise.all(
+      Contents.map(async (item) => {
+        const getObjectParams = {
+          Bucket: process.env.NEXT_PUBLIC_SECRET_BUCKET_NAME,
+          Key: item.Key,
+        };
+        const getObject = new GetObjectCommand(getObjectParams);
+        const { Body } = await s3.send(getObject);
+        const data = await streamToString(Body);
+        console.log('Backend API GET Data:', data);
+        return JSON.parse(data);
+      })
+    );
+
+    return new Response(JSON.stringify(users), { status: 200 });
   } catch (e) {
-    console.error(e);
-    return Response.json([]);
+    console.error('Error:', e);
+    return new Response(
+      JSON.stringify({ error: e.message || 'Unknown error' }),
+      { status: 500 }
+    );
   }
 }

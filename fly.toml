@@ -1,9 +1,9 @@
-# fly.toml app configuration file generated for fly-tigris-app-2 on 2024-03-20T00:31:38Z
+# fly.toml app configuration file generated for fly-tigris-user-database on 2024-03-26T13:36:57Z
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'fly-tigris-app-2'
+app = 'fly-tigris-user-database'
 primary_region = 'lhr'
 
 [build]
