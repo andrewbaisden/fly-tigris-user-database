@@ -41,8 +41,11 @@ Update the API variable for the components inside of the components folder. Loca
 The API variable is near the top inside of these files which you will need to update:
 
 components/AddUserForm/AddUserForm.js
+
 components/DeleteUserForm/DeleteUserForm.js
+
 components/UpdateUserForm/UpdateUserForm.js
+
 components/UserDatabaseTable/UserDatabaseTable.js
 
 See the example code here for the API variable:
